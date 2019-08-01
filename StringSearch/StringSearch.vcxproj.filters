@@ -18,6 +18,9 @@
     <ClCompile Include="StringSearch.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\Downloads\sdl-visualstudio-4627\SDL\include\begin_code.h">
