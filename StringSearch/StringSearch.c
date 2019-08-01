@@ -108,7 +108,6 @@ int main()
    }
 }
 
-
 if (q < 3) {
 	printf("Suggested Results\n");
 	printf("-----------------\n");
@@ -126,6 +125,9 @@ if (q < 3) {
 					}
 					else if (arrayofwords[w][p] == arrayofarticles[x][u]) {
 						p++;
+						if (arrayofarticles[x][u] = NULL) {
+
+						}
 					}
 				}
 			}
