@@ -104,36 +104,58 @@ int main()
 				   printf("\n");
 			   }
 		   }
+		   int arrayofhits[MAX_LENGTH];
+		   if (q < 3) {
+			   printf("Suggested Results\n");
+			   printf("-----------------\n");
+			   int f; //f is the count of how many 'hits'
+			   for (int x = 0; x < l; x) { //loops over each article
+				   for (int w = 0; w < 33; w) { //loops over each word in search term
+					   for (int p = 0; p < 45; p) { //loops over each character in each word in search term
+						   for (int u = 0; u < MAX_LENGTH; u++) { //loops over each character in article
+							   if (arrayofwords[w][p] != arrayofarticles[x][u]){ //if they aren't equal to each other
+								   p = 0; //set p to 0
+								   if (arrayofarticles[x][u] = NULL) {
+									   w++; //look at next word
+									   u = 0; //start over for original article
+									   break;
+								   }
+								   }
+							   else if (arrayofwords[w][p] == arrayofarticles[x][u]) { //if they are equal characters
+								   p++; //increase p as well
+									   if (arrayofwords[w][p] == NULL) { //if they have gone through all the words
+										   f++; //increase number of 'hit'
+										   arrayofhits[x] = f;
+										   
+										   f = 0;
+										   x++; //looking at second article
+									   }
+							   }
+						   }
+					   }
+				   }
+			   }
+		   }
+		   for (int r = 0; r < MAX_LENGTH; r++) {
+			   arrayofarticles[x] = arrayofhits[r] =
+		   }
+		   for (int y = 0; y < MAX_LENGTH; y++)                     //Loop for ascending ordering
+		   {
+			   for (int c = 0; c < MAX_LENGTH; c++)             //Loop for comparing other values
+			   {
+				   if (arrayofhits[c] < arrayofhits[y])                //Comparing other array elements
+				   {
+					   int tmp = arrayofhits[c];         //Using temporary variable for storing last value
+					   arrayofhits[y] = arrayofhits[c];            //replacing value
+					   arrayofhits[c] = tmp;             //storing last value
+				   }
+			   }
+		   }
 	   }
    }
 }
 
-if (q < 3) {
-	printf("Suggested Results\n");
-	printf("-----------------\n");
-	for (int x = 0; x < l; x) { //loops over each article
-		for (int w = 0; w < 33; w) { //loops over each word in search term
-			for (int p = 0; p < 45; p) { //loops over each character in each word in search term
-				for (int u = 0; u < MAX_LENGTH; u++) { //loops over each character in article
-					if (arrayofwords[w][p] != arrayofarticles[x][u]{ //if they aren't equal to each other
-						p = 0; //set p to 0
-						if (arrayofarticles[x][u] = NULL) {
-							w++; //look at next word
-							u = 0; //start over for original article
-							break;  
-						}
-					}
-					else if (arrayofwords[w][p] == arrayofarticles[x][u]) {
-						p++;
-						if (arrayofarticles[x][u] = NULL) {
 
-						}
-					}
-				}
-			}
-		}
-	}
-}
 
 //strcmp
 
