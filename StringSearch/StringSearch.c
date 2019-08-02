@@ -2,9 +2,9 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define MAX_LENGTH 100000
-#define MAX_WORDS 33;
-#define MAX_WORD_LENGTH 45;
+#define MAX_LENGTH 10000
+#define MAX_WORDS 33
+#define MAX_WORD_LENGTH 45
 
 int main()
 {
@@ -18,76 +18,67 @@ int main()
 	int numwordsinEntire = 0; //sets default number of words counted to zero
 	int z = 0; //sets 'spot#' in array created below equal to zero
 	int wordlength[33]; //creates an integer array of 33 (max number of words) with each of their wordlength
+	int recordofsearchterm[MAX_LENGTH];
+	//for loop below is wrong
 	for (int searchTermincrement = 0; searchTermincrement <= strlen(entire); searchTermincrement++) { //for increment going through characters in entire (add)
-		if (entire[searchTermincrement] == ' ') { //if we have hit a space, increment numwords by one
+		if (entire[searchTermincrement] == ' ' || entire[searchTermincrement] == '\0') { //if we have hit a space, increment numwords by one
 			numwordsinEntire++; //incrementing number of words
 			if (z == 0) { //if z is zero, 
+				recordofsearchterm[z] = searchTermincrement;
 				wordlength[z] = searchTermincrement; //correct and verified by anish at 9:41 P.M.
+				z++;  //incrementing z for next round
 			}
 			else if (z > 0) { //if z is greater than zero
-				wordlength[z] = searchTermincrement - wordlength[z - 1]; //THIS IS WRONG
+				recordofsearchterm[z] = searchTermincrement;
+				wordlength[z] = searchTermincrement - recordofsearchterm[z - 1] - 1;
+				z++;  //incrementing z for next round
 			}
-			z++;  //incrementing z for next round 
 		}
 	}
-	numwordsinEntire = numwordsinEntire + 1; //number of words is 1 more than how many spaces exist.
-	printf("%d\n", numwordsinEntire); //PRINTCHECKS
-	printf("%d\n", wordlength[1]); //PRINTCHECKS
-	int i = 0; //setting i to zero
+	printf("%d\n", numwordsinEntire); //PRINTCHECKS - CORRECT
+	printf("%d\n", wordlength[0]); //PRINTCHECKS - CORRECT 
+	printf("%d\n", wordlength[1]); //PRINTCHECKS - CORRECT
 	char arrayofwords[33][45] = { 0 }; //creating a character array of words (how many words by how long each word reasonably can be)
-	int g = 0;
-	for (int wordbyword = 0; wordbyword < numwordsinEntire; wordbyword++) { //creating a for loop that goes through each word
-		char* currentWord = malloc(wordlength[wordbyword] * sizeof(char)); //creating a character array for word number x
-		if (currentWord <= wordlength[wordbyword] + 1) { //while we haven't pointed to all the letters yet in the word (SHOULD I USE ASTERISK HERE??)
-			if (entire[g] != ' ' || entire[g] != NULL) { //if we are not pointing to a space in entire
-				*currentWord = entire[g]; //add the character in entire to currentWord pointer 
-				currentWord++; //pointer move to next space or sequence
-				wordbyword--;
-				g++;
-			}
-			else if (entire[g] == ' ' || entire[wordbyword] == NULL) { //if the character in entire is a space
-				*currentWord = NULL; //add null character to array
-				g++; //wordbyword++; //increment number of words we've gone through 
-			}
+	//for loop below seems wrong
+	int j = 0, k;
+	for (int i = 0; i < numwordsinEntire; i++) { //creating a for loop that goes through each word
+		char currentWord[MAX_WORD_LENGTH]; //creating a character array for word number x
+		for (k = 0; !(entire[j] == ' ' || entire[j] == '\0'); j++, k++) { //while we haven't pointed to all the letters yet in the word (SHOULD I USE ASTERISK HERE??)
+			currentWord[k] = entire[j]; //add the character in entire to currentWord pointer 
 		}
+		j++;
+		currentWord[k] = '\0';
 		strcpy_s(arrayofwords[i], 45, currentWord); //copy currentword to a two-dimensional array of row i
-		i++;  //increment i or row number 
 	}
-	int m = 0; //setting m to zero
+	int r = 0; //setting m to zero
 	int numblocksinInput = 0; //setting numblocksinInput to zero
 	int articlelength[MAX_LENGTH]; //creating a one-dimensional int array of lengths of each article
 	char arrayofarticles[45][MAX_LENGTH]; //creating a two-dimensional array of articles -> 45 potential articles (a stretch) * MAXIMUM LENGTH OF BLOCK (A STRETCH)
+	int whatcharareweon[MAX_LENGTH];
 	for (int charsoftext = 0; charsoftext <= strlen(input); charsoftext++) { //creating for loop that goes through characters of text, # is incremented
-		if (input[charsoftext] == '@') {  //if we hit an @
+		if (input[charsoftext] == '@' || input[charsoftext] == '\0') {  //if we hit an @
 			numblocksinInput++; //incrementing number of blocks
-			if (m == 0) {  //if 1st position in one-d array of lengths)
-				articlelength[m] = charsoftext;  //setting length of first article to chars of text (we already know the length of the article)
+			if (r == 0) {  //if 1st position in one-d array of lengths)
+				articlelength[r] = charsoftext;  //setting length of first article to chars of text (we already know the length of the article)
+				whatcharareweon[r] = charsoftext;
 			}
-			else if (m > 0) { //(if greater than 1st position in one-d array of lengths) 
-				articlelength[m] = charsoftext - wordlength[m - 1] - 1; //MATH WRONG
+			else if (r > 0) { //(if greater than 1st position in one-d array of lengths) 
+				whatcharareweon[r] = charsoftext;
+				articlelength[r] = charsoftext - whatcharareweon[r - 1] - 1; //MATH CORRECTED
 			}
-			m++; //incrementing m
+			r++; //incrementing m
 		}
 	}
-	numblocksinInput = numblocksinInput + 1; //adds one, same principle
-	int l = 0; //setting integer l to zero
-	int t = 0;
-	for (int articlebyarticle = 0; articlebyarticle < numblocksinInput; articlebyarticle++) { //creating a for loop that goes through each word
-		char* currentarticle = malloc(articlelength[articlebyarticle] * sizeof(char)); //creating a character array for word number x
-		if (currentarticle <= articlelength[articlebyarticle] + 1) { //while we haven't pointed to all the letters yet in the word (SHOULD I USE ASTERISK HERE??)
-			if (input[t] != ' ' || input[t] != NULL) { //if we are not pointing to a space in entire
-				*currentarticle = input[t]; //add the character in entire to currentWord pointer 
-				currentarticle++; //pointer move to next space or sequence
-				articlebyarticle--;
-				t++;
-			}
-			else if (input[t] == ' ' || input[t] == NULL) { //if the character in entire is a space
-				*currentarticle = NULL; //add null character to array
-				t++; //wordbyword++; //increment number of words we've gone through 
-			}
+	int m = 0, n;
+	int l = 0;
+	for (l = 0; l < numblocksinInput; l++) { //creating a for loop that goes through each word
+		char currentarticle[MAX_LENGTH]; //creating a character array for word number x
+		for (n = 0; !(input[m] == '@' || input[m] == '\0'); m++, n++) { //while we haven't pointed to all the letters yet in the word (SHOULD I USE ASTERISK HERE??)
+			currentarticle[n] = input[m]; //add the character in entire to currentWord pointer 
 		}
-		strcpy_s(arrayofarticles[l], MAX_LENGTH, currentarticle); //copying into two-dimensional arrayof articles in row number l
-		l++;
+		m++;
+		currentarticle[n] = '\0';
+		strcpy_s(arrayofarticles[l], MAX_LENGTH, currentarticle); //copy currentword to a two-dimensional array of row i
 	}
 	int s = 0;
 	int q = 0;
@@ -110,62 +101,133 @@ int main()
 					printf("\n");
 				}
 			}
-			int arrayofhits[MAX_LENGTH];
-			/* **arrayofhits = malloc(MAX_LENGTH * sizeof(int));
-			*/
-			int x = 0;
-			if (q < 3) {
-				printf("Suggested Results\n");
-				printf("-----------------\n");
-				int f = 0; //f is the count of how many 'hits'
-				for (int x = 0; x < l; x) { //loops over each article
-					for (int w = 0; w < 33; w) { //loops over each word in search term
-						for (int p = 0; p < 45; p) { //loops over each character in each word in search term
-							for (int u = 0; u < MAX_LENGTH; u++) { //loops over each character in article
-								if (arrayofwords[w][p] != arrayofarticles[x][u]) { //if they aren't equal to each other
-									p = 0; //set p to 0
-									if (arrayofarticles[x][u] == NULL) {
-										w++; //look at next word
-										u = 0; //start over for original article
-										break;
-									}
-									else if (arrayofwords[w][p] == arrayofarticles[x][u]) { //if they are equal characters
-										p++; //increase p as well
-										if (arrayofwords[w][p] == NULL) { //if they have gone through all the words
-											f++; //increase number of 'hit'
-											arrayofhits[x] = f;
-											*arrayofhits = arrayofarticles[x];
-											f = 0;
-											x++; //looking at second article
-										}
-									}
-								}
-							}
-						}
+		}
+	}
+	int arrayofhits[MAX_LENGTH] = { 0 };
+	int x = 0;
+	int f = 0; //f is the count of how many 'hits'
+	int w = 0;
+	int p = 0;
+	if (q < 3) {
+		printf("Suggested Results\n");
+		printf("-----------------\n");
+		for (int u = 0; u < MAX_LENGTH; u++) { //loops over each character in article
+			if (arrayofwords[w][p] != arrayofarticles[x][u]) { //if they aren't equal to each other
+				p = 0; //set p to 0
+				if (arrayofarticles[x][u] == NULL) {
+					w++; //look at next word
+					if (w < 33) {
+						u = 0; //start over for original article
 					}
-				}
-				for (int r = 0; r < MAX_LENGTH; r++) {
-					//*arrayofarticles[x] = arrayofhits[r];
-				}
-				for (int y = 0; y < MAX_LENGTH; y++)                     //Loop for ascending ordering
-				{
-					for (int c = 0; c < MAX_LENGTH; c++)             //Loop for comparing other values
-					{
-						if (arrayofhits[c] < arrayofhits[y])                //Comparing other array elements
-						{
-							int tmp = arrayofhits[c];         //Using temporary variable for storing last value
-							arrayofhits[y] = arrayofhits[c];            //replacing value
-							arrayofhits[c] = tmp;             //storing last value
-						}
+					else {
+						u++;
 					}
+					continue;
 				}
 			}
+			else if (arrayofwords[w][p] == arrayofarticles[x][u]) { //if they are equal characters
+				p++; //increase p as well
+				if (arrayofwords[w][p] == NULL) { //if they have gone through all the words (meaning exist in article)
+					f++; //increase number of 'hit'
+					arrayofhits[x] = f; //(create new array)
+					f = 0;
+					x++; //looking at second article
+				}
+			}
+		}
+		char temp[MAX_LENGTH];
+		for (int y = 0; y < MAX_LENGTH; y++)       //Loop for descending ordering
+		{
+			for (int c = 0; c < MAX_LENGTH; c++)             //Loop for comparing other values
+			{
+				if (arrayofhits[c] == 0)
+					break;
+				if (arrayofhits[c] < arrayofhits[y])                //Comparing other array elements
+				{
+					int tmp = arrayofhits[c];         //Using temporary variable for storing last value
+					arrayofhits[c] = arrayofhits[y];            //replacing value
+					arrayofhits[y] = tmp;    //storing last value
+					strcpy_s(temp, MAX_LENGTH, arrayofarticles[c]);
+					strcpy_s(arrayofarticles[c], MAX_LENGTH, arrayofarticles[y]);
+					strcpy_s(arrayofarticles[y], MAX_LENGTH, temp[y]);
+				}
+			}
+		}
+		for (int u = 0; u < 3; u++) {
+			printf("%s\n", arrayofarticles[u]);
 		}
 	}
 }
 
 
-	
+
+/* 
+			for (int x = 0; x < l; x) { //loops over each article
+				for (int w = 0; w < 33; w) { //loops over each word in search term
+					for (int p = 0; p < 45; p) { //loops over each character in each word in search term
+						for (int u = 0; u < MAX_LENGTH; u++) { //loops over each character in article
+							if (arrayofwords[w][p] != arrayofarticles[x][u]) { //if they aren't equal to each other
+								p = 0; //set p to 0
+								if (arrayofarticles[x][u] == NULL) {
+									w++; //look at next word
+									u = 0; //start over for original article
+									continue;
+								}
+							}
+							else if (arrayofwords[w][p] == arrayofarticles[x][u]) { //if they are equal characters
+								p++; //increase p as well
+								if (arrayofwords[w][p] == NULL) { //if they have gone through all the words (meaning exist in article)
+									f++; //increase number of 'hit'
+									arrayofhits[x] = f; //(create new array)
+									f = 0;
+									x++; //looking at second article
+								}
+							}
+						}
+					}
+				}
+			}
+
+*/
+
+
+
+
+/*char arrayofwords[33][45] = { 0 }; //creating a character array of words (how many words by how long each word reasonably can be)
+	//for loop below seems wrong
+
+int j = 0, k;
+for (int i = 0; i < numwordsinEntire; i++) { //creating a for loop that goes through each word
+	char currentWord[MAX_WORD_LENGTH]; //creating a character array for word number x
+	for (k = 0; !(entire[j] == ' ' || entire[j] == '\0'); j++, k++) { //while we haven't pointed to all the letters yet in the word (SHOULD I USE ASTERISK HERE??)
+		currentWord[k] = entire[j]; //add the character in entire to currentWord pointer 
+	}
+	j++;
+	currentWord[k] = '\0';
+	strcpy_s(arrayofwords[i], 45, currentWord); //copy currentword to a two-dimensional array of row i
+}
+printf("%s", arrayofwords[0]);
+
+
+
+for (int articlebyarticle = 0; articlebyarticle < numblocksinInput; articlebyarticle++) { //creating a for loop that goes through each word
+	char* currentarticle = malloc(articlelength[articlebyarticle] * sizeof(char)); //creating a character array for word number x
+	if (currentarticle <= articlelength[articlebyarticle] + 1) { //while we haven't pointed to all the letters yet in the word (SHOULD I USE ASTERISK HERE??)
+		if (input[t] != ' ' || input[t] != NULL) { //if we are not pointing to a space in entire
+			*currentarticle = input[t]; //add the character in entire to currentWord pointer 
+			currentarticle++; //pointer move to next space or sequence
+			articlebyarticle--;
+			t++;
+		}
+		else if (input[t] == ' ' || input[t] == NULL) { //if the character in entire is a space
+			*currentarticle = NULL; //add null character to array
+			t++; //wordbyword++; //increment number of words we've gone through 
+		}
+	}
+	strcpy_s(arrayofarticles[l], MAX_LENGTH, currentarticle); //copying into two-dimensional arrayof articles in row number l
+	l++;
+}
+
 
 /*
 for (int articlebyarticle = 0; articlebyarticle < numblocksinInput; articlebyarticle++) { //creating for loop going through each article if number of blocks isn't reached
