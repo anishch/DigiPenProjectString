@@ -153,7 +153,7 @@ int main()
 				}
 			}
 		}
-		for (int u = 0; u < 3; u++) {
+		for (int u = 0; u < 2; u++) {
 			printf("%s\n", arrayofarticles[u]);
 		}
 	}
